@@ -102,12 +102,34 @@ class PeliculasController extends \yii\web\Controller
     private function buscarPelicula($id)
     {
         $fila = Yii::$app->db
-            ->createCommand('SELECT *
-                               FROM peliculas
-                              WHERE id = :id', [':id' => $id])->queryOne();
+            ->createCommand('SELECT p.*, genero
+                               FROM peliculas p
+                               JOIN generos g
+                                 ON genero_id = g.id
+                              WHERE p.id = :id', [':id' => $id])->queryOne();
         if ($fila === false) {
             throw new NotFoundHttpException('Esa película no existe.');
         }
         return $fila;
+    }
+
+    public function actionVer($id)
+    {
+        $pelicula = $this->buscarPelicula($id);
+
+        $participantes = Yii::$app->db
+            ->createCommand('SELECT pa.*, nombre, rol
+                               FROM participantes pa
+                               JOIN roles r
+                                 ON rol_id = r.id
+                               JOIN personas p
+                                 ON persona_id = p.id
+                              WHERE pelicula_id = :id', [':id' => $id])
+            ->queryAll();
+
+        return $this->render('ver', [
+            'pelicula' => $pelicula,
+            'participantes' => $participantes,
+        ]);
     }
 }
