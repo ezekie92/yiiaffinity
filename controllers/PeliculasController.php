@@ -80,6 +80,15 @@ class PeliculasController extends \yii\web\Controller
         return $this->render('update', [
             'peliculasForm' => $peliculasForm,
             'listaGeneros' => $this->listaGeneros(),
+            'participantes' => $this->buscarParticipante($id),
+        ]);
+    }
+
+    public function actionVer($id)
+    {
+        return $this->render('ver', [
+            'pelicula' => $this->buscarPelicula($id),
+            'participantes' => $this->buscarParticipante($id),
         ]);
     }
 
@@ -113,11 +122,9 @@ class PeliculasController extends \yii\web\Controller
         return $fila;
     }
 
-    public function actionVer($id)
+    private function buscarParticipante($id)
     {
-        $pelicula = $this->buscarPelicula($id);
-
-        $participantes = Yii::$app->db
+        return Yii::$app->db
             ->createCommand('SELECT pa.*, nombre, rol
                                FROM participantes pa
                                JOIN roles r
@@ -126,10 +133,5 @@ class PeliculasController extends \yii\web\Controller
                                  ON persona_id = p.id
                               WHERE pelicula_id = :id', [':id' => $id])
             ->queryAll();
-
-        return $this->render('ver', [
-            'pelicula' => $pelicula,
-            'participantes' => $participantes,
-        ]);
     }
 }

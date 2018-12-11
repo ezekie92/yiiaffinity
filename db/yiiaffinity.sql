@@ -54,10 +54,11 @@ DROP TABLE IF EXISTS participantes CASCADE;
 
 CREATE TABLE participantes
 (
-    pelicula_id BIGINT REFERENCES peliculas (id)
-  , persona_id BIGINT REFERENCES personas (id)
-  , rol_id BIGINT REFERENCES roles (id)
-  , PRIMARY KEY (pelicula_id, persona_id, rol_id)
+    id          BIGSERIAL PRIMARY KEY
+  , pelicula_id BIGINT    NOT NULL REFERENCES peliculas (id)
+  , persona_id  BIGINT    NOT NULL REFERENCES personas (id)
+  , rol_id      BIGINT    NOT NULL REFERENCES roles (id)
+  , UNIQUE (pelicula_id, persona_id, rol_id)
 );
 
 -- INSERT
