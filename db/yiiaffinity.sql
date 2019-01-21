@@ -61,6 +61,30 @@ CREATE TABLE participantes
   , UNIQUE (pelicula_id, persona_id, rol_id)
 );
 
+DROP TABLE IF EXISTS papeles CASCADE;
+
+CREATE TABLE papeles
+(
+    id      BIGSERIAL    PRIMARY KEY
+  , papel   VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS participaciones CASCADE;
+
+CREATE TABLE participaciones
+(
+    pelicula_id BIGINT NOT NULL REFERENCES peliculas (id)
+                ON DELETE NO ACTION
+                ON UPDATE CASCADE
+  , persona_id  BIGINT NOT NULL REFERENCES personas (id)
+                ON DELETE NO ACTION
+                ON UPDATE CASCADE
+  , papel_id    BIGINT NOT NULL REFERENCES papeles (id)
+                ON DELETE NO ACTION
+                ON UPDATE CASCADE
+
+);
+
 -- INSERT
 
 INSERT INTO usuarios (login, password)
@@ -81,7 +105,8 @@ VALUES ('Los últimos Jedi', 2017, 'Va uno y se cae...', 204, 3)
 
 INSERT INTO personas (nombre)
 VALUES ('Sylvester Stallone')
-     , ('Chiquito de la Calzada');
+     , ('Chiquito de la Calzada')
+     , ('Rami Malek');
 
 INSERT INTO roles (rol)
 VALUES ('Director')
@@ -94,3 +119,13 @@ VALUES (1, 1, 3)
      , (3, 1, 2)
      , (1, 2, 2)
      , (3, 2, 3);
+
+INSERT INTO papeles (papel)
+VALUES ('Director')
+     , ('Guionista')
+     , ('Actor');
+
+INSERT INTO participaciones (pelicula_id, persona_id, papel_id)
+VALUES (1,1,1)
+     , (2,2,2)
+     , (3,3,3);
