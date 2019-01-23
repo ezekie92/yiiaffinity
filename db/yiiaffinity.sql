@@ -38,27 +38,26 @@ DROP TABLE IF EXISTS personas CASCADE;
 
 CREATE TABLE personas
 (
-    id      BIGSERIAL    PRIMARY KEY
-  , nombre  VARCHAR(255) NOT NULL
+    id     BIGSERIAL    PRIMARY KEY
+  , nombre VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS papeles CASCADE;
 
-CREATE TABLE roles
+CREATE TABLE papeles
 (
-    id  BIGSERIAL    PRIMARY KEY
-  , rol VARCHAR(255) NOT NULL UNIQUE
+    id    BIGSERIAL    PRIMARY KEY
+  , papel VARCHAR(255) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS participantes CASCADE;
+DROP TABLE IF EXISTS participaciones CASCADE;
 
-CREATE TABLE participantes
+CREATE TABLE participaciones
 (
-    id          BIGSERIAL PRIMARY KEY
-  , pelicula_id BIGINT    NOT NULL REFERENCES peliculas (id)
-  , persona_id  BIGINT    NOT NULL REFERENCES personas (id)
-  , rol_id      BIGINT    NOT NULL REFERENCES roles (id)
-  , UNIQUE (pelicula_id, persona_id, rol_id)
+    pelicula_id BIGINT REFERENCES peliculas (id)
+  , persona_id  BIGINT REFERENCES personas (id)
+  , papel_id    BIGINT REFERENCES papeles (id)
+  , PRIMARY KEY (pelicula_id, persona_id, papel_id)
 );
 
 -- INSERT
@@ -80,17 +79,18 @@ VALUES ('Los últimos Jedi', 2017, 'Va uno y se cae...', 204, 3)
      , ('Aquí llega Condemor', 1996, 'Mejor no cuento nada...', 90, 1);
 
 INSERT INTO personas (nombre)
-VALUES ('Sylvester Stallone')
-     , ('Chiquito de la Calzada');
+VALUES ('George Lucas')
+     , ('Santiago Segura');
 
-INSERT INTO roles (rol)
+INSERT INTO papeles (papel)
 VALUES ('Director')
      , ('Productor')
-     , ('Intérprete');
+     , ('Intérprete')
+     , ('Guionista');
 
-INSERT INTO participantes (pelicula_id, persona_id, rol_id)
-VALUES (1, 1, 3)
+INSERT INTO participaciones (pelicula_id, persona_id, papel_id)
+VALUES (1, 1, 1)
+     , (1, 2, 3)
      , (2, 2, 1)
-     , (3, 1, 2)
-     , (1, 2, 2)
-     , (3, 2, 3);
+     , (2, 2, 2)
+     , (2, 1, 4);
